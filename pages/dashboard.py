@@ -25,25 +25,37 @@ uploaded_temp = "uploaded_dat.csv"
 processed_temp = "processed_reports.csv"
 
 # Session State Initialization
-for key, default in {
-    "report_generated": False,
-    "chat_history": [],
-    "bg_status": None,
-    "file_uploaded": False,
-    "file_ready": False,
-    "audio_ready": False,
-    "speech_failures": [],
-    "temp_audio_folder": None,
-    "_temp_audio_dir_obj": None,
-    "reports_df": None,
-    "run_report": False,
-    "run_audio": False,
-    "run_audio_failed": False,
-    "run_mail": False,
-    "report_downloaded": False,
-}.items():
-    if key not in st.session_state:
-        st.session_state[key] = default
+if "report_generated" not in st.session_state:
+    st.session_state.report_generated = False
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+if "bg_status" not in st.session_state:
+    st.session_state.bg_status = None
+if "file_uploaded" not in st.session_state:
+    st.session_state.file_uploaded = False
+if "file_ready" not in st.session_state:
+    st.session_state.file_ready = False
+if "audio_ready" not in st.session_state:
+    st.session_state.audio_ready = False
+if "speech_failures" not in st.session_state:
+    st.session_state.speech_failures = []
+if "temp_audio_folder" not in st.session_state:
+    st.session_state.temp_audio_folder = None
+if "_temp_audio_dir_obj" not in st.session_state:
+    st.session_state._temp_audio_dir_obj = None
+if "reports_df" not in st.session_state:
+    st.session_state.reports_df = None
+if "run_report" not in st.session_state:
+    st.session_state.run_report = False
+if "run_audio" not in st.session_state:
+    st.session_state.run_audio = False
+if "run_audio_failed" not in st.session_state:
+    st.session_state.run_audio_failed = False
+if "run_mail" not in st.session_state:
+    st.session_state.run_mail = False
+if "report_downloaded" not in st.session_state:
+    st.session_state.report_downloaded = False
+
 
 # Background Tasks
 def run_report_pipeline_bg():
