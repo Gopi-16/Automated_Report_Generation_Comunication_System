@@ -1,0 +1,43 @@
+/* === BACKGROUND IMAGE === */
+body {
+    background-image: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?fit=crop&w=1400&q=80");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* === MAIN CONTAINER STYLING === */
+
+/* === HEADINGS === */
+h1, h2, h3 {
+    color: #222;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* === BUTTONS === */
+.stButton > button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.stButton > button:hover {
+    background-color: #0056b3;
+    transform: scale(1.03);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 1rem;
+        margin: 2vh auto;
+        width: 90%;
+    }
+}

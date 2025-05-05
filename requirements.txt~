@@ -1,0 +1,12 @@
+langchain
+langchain-community
+langchain-core
+sentence-transformers
+faiss-cpu
+pymupdf
+requests
+telegram-bot
+gTTS
+pathlib
+pandas
+nbimporter

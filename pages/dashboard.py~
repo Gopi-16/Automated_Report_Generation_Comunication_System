@@ -1,0 +1,207 @@
+import streamlit as st
+import pandas as pd
+import os
+import tempfile
+import shutil
+
+# Local module imports
+from utils import load_css
+from Model_Connection_Code import model_response, generate_prompt_template
+from Preprocessing_Data_Code import preprocess
+from Refining_Response_Code import refine_response
+from Report_Generation_Code import generate_reports
+from GTTS_Code import convert_speech
+from mail import run_mailing
+
+
+st.set_page_config(page_title="User Management App", layout="centered", initial_sidebar_state="collapsed")
+
+# Global variable to store reports
+reports_list = []
+
+# File names
+uploaded_temp = "uploaded_dat.csv"
+processed_temp = "processed_reports.csv"
+
+if "report_generated" not in st.session_state:
+    st.session_state.report_generated = False
+
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+st.markdown("""
+<style>
+.chat-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    padding: 10px;
+}
+
+.chat-message {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 10px;
+    font-size: 14px;
+}
+.user-message {
+    background-color: #DCF8C6;
+    align-self: flex-end;
+    text-align: right;
+}
+.bot-message {
+    background-color: #F1F0F0;
+    align-self: flex-start;
+    text-align: left;
+}
+</style>
+""", unsafe_allow_html=True)
+
+def show_dashboard(switch_page):
+    global reports_list
+
+    load_css("styles/base.css")
+    load_css("styles/dashboard.css")
+
+    st.markdown('<div class="dashboard-container">', unsafe_allow_html=True)
+    st.markdown('<h1 class="dashboard-title">\U0001F389 Welcome!</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="dashboard-subtext">You have successfully signed in.</p>', unsafe_allow_html=True)
+
+    uploaded_file = st.file_uploader("\U0001F4E4 Upload CSV File for Mailing", type=["csv"])
+
+    if uploaded_file is not None:
+        if "file_uploaded" not in st.session_state:
+            with open(uploaded_temp, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.session_state["file_uploaded"] = True
+            st.success("✅ File uploaded successfully.")
+
+    if "temp_audio_folder" not in st.session_state:
+        temp_dir = tempfile.TemporaryDirectory()
+        st.session_state.temp_audio_folder = temp_dir.name
+        st.session_state._temp_audio_dir_obj = temp_dir
+
+    button_label = "📝 Generate Report" if not st.session_state.report_generated else "🔁 Regenerate Failed Reports"
+
+    if st.button(button_label):
+        if os.path.exists(uploaded_temp):
+            df = generate_reports(uploaded_temp)
+            if isinstance(df, pd.DataFrame):
+                df["Generated_Report"] = df["Generated_Report"].astype(str)
+                df["Status"] = df["Status"].map({1: "Success", 0: "Fail"})
+                df.to_csv(processed_temp, index=False)
+                shutil.copyfile(processed_temp, uploaded_temp)
+                reports_list = df["Generated_Report"].tolist()
+                st.session_state.reports_df = df
+                st.session_state["file_ready"] = True
+                st.success("✅ Reports generated!")
+                st.dataframe(df[["Name", "gmail", "Status"]])
+                if (df["Status"] == "Fail").any():
+                    st.session_state.report_generated = True
+                else:
+                    st.session_state.report_generated = False
+            else:
+                st.error("⚠️ Report generation did not return a DataFrame.")
+        else:
+            st.error("⚠️ Uploaded file not found.")
+
+    if st.session_state.get("file_ready") and st.button("🔊 Convert to Speech"):
+        audio_folder = st.session_state.temp_audio_folder
+        result = convert_speech(reports_list, audio_folder)
+        st.session_state["audio_ready"] = True
+        st.session_state["speech_failures"] = result.get("failed", [])
+        st.success("🎤 Audio files created for each student!")
+        st.write(result)
+
+    if st.session_state.get("speech_failures") and st.button("🔁 Regenerate Failed Audio"):
+        audio_folder = st.session_state.temp_audio_folder
+        failed_reports = [reports_list[i] for i in st.session_state["speech_failures"]]
+        result = convert_speech(failed_reports, audio_folder)
+        st.session_state["speech_failures"] = result.get("failed", [])
+        st.success("🔁 Retried failed audio conversions.")
+        st.write(result)
+
+    if st.session_state.get("file_ready"):
+        with open(processed_temp, "rb") as f:
+            st.download_button("⬇️ Download Reports CSV", f, file_name="student_reports.csv")
+
+    if st.session_state.get("audio_ready"):
+        audio_folder = st.session_state.temp_audio_folder
+        audio_files = os.listdir(audio_folder)
+        for file in audio_files:
+            file_path = os.path.join(audio_folder, file)
+            with open(file_path, "rb") as f:
+                st.download_button(f"⬇️ Download {file}", f, file_name=file)
+
+    if st.session_state.get("audio_ready") and st.button("📬 Send Mails"):
+        if os.path.exists(processed_temp):
+            sent, failed = run_mailing(processed_temp, st.session_state.temp_audio_folder)
+            st.success(f"✅ Sent to {len(sent)} emails.")
+            if failed:
+                st.warning(f"⚠️ Failed for {len(failed)} emails.")
+        else:
+            st.error("❌ Processed report file not found.")
+
+    if st.button("🚪 Logout"):
+        st.session_state.clear()
+        switch_page("home")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Chatbot toggle and UI
+    st.markdown('<div class="chat-icon" onclick="document.querySelector(\'#chatbox\').style.display = \'block\'">💬</div>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <script>
+    if (!window.chatboxInjected) {
+        window.chatboxInjected = true;
+        const chatbox = document.createElement('div');
+        chatbox.id = 'chatbox';
+        chatbox.className = 'chat-box';
+        chatbox.style.display = 'none';
+        document.body.appendChild(chatbox);
+    }
+    </script>
+    """, unsafe_allow_html=True)
+
+    with st.container():
+        st.markdown('<div class="chat-box" id="chatbox">', unsafe_allow_html=True)
+        for message in st.session_state.chat_history:
+            msg_class = "user-message" if message["role"] == "user" else "bot-message"
+            st.markdown(f'<div class="chat-message {msg_class}">{message["content"]}</div>', unsafe_allow_html=True)
+
+        with st.form(key="chat_form"):
+            query = st.text_input("Ask something...", key="user_query")
+            if st.form_submit_button("Ask"):
+                if query:
+                    st.session_state.chat_history.append({"role": "user", "content": query})
+                    response = question(query)  # Assuming question() function returns chatbot response
+                    st.session_state.chat_history.append({"role": "bot", "content": response})
+        st.markdown('</div>', unsafe_allow_html=True)
+
+def question(query):
+    # Dummy response logic, replace with actual logic or API call
+    return f"You asked: {query}. This is a sample response."
+

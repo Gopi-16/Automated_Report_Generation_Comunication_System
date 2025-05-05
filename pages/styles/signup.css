@@ -1,0 +1,103 @@
+/* Reset & base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #f3f4f6;
+    color: #1e1e1e;
+}
+
+/* Container to center the form and adjust its vertical placement */
+.stForm {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Move up */
+    padding-top: 0vh; /* Push it downward from top a bit */
+    min-height: 95vh;
+    background: linear-gradient(135deg, #eef2f7, #cfd9e8);
+}
+
+/* Form box */
+form {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+}
+
+/* Title */
+h1.text-center {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    border: 1px solid #d0d7e2;
+    background-color: #fafbfc;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    border-color: #4f92ff;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(79, 146, 255, 0.25);
+    outline: none;
+}
+
+/* Checkbox */
+label[data-baseweb="checkbox"] {
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Button styling */
+.stButton {
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Buttons inside form */
+.stButton > button {
+    background-color: #4f92ff !important;
+    color: white !important;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 12px 0;
+    border-radius: 10px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.stButton > button:hover {
+    background-color: #2563eb !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 480px) {
+    form {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    h1.text-center {
+        font-size: 1.5rem;
+    }
+
+    .stButton > button {
+        font-size: 0.95rem;
+    }
+}

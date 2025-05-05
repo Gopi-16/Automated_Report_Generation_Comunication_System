@@ -1,0 +1,49 @@
+/* Shared layout styles for all pages */
+html, body, .stApp {
+    background-color: #f0f2f6;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.page-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Make text inputs responsive */
+input, textarea {
+    width: 100% !important;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Responsive buttons */
+.stButton > button {
+    background-color: #4c6ef5 !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px !important;
+    width: 100%;
+}
+
+.stButton > button:hover {
+    background-color: #3b5bdb !important;
+}
+
+/* Utility spacing */
+.mt-2 { margin-top: 1rem; }
+.mb-2 { margin-bottom: 1rem; }
+.text-center { text-align: center; }
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+}

@@ -1,0 +1,66 @@
+/* --- Base Layout Reset --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+input, textarea {
+    border: 2px solid #007bff !important;
+    border-radius: 8px !important;
+    padding: 10px !important;
+    font-size: 1rem !important;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Optional: On focus, highlight border */
+input:focus, textarea:focus {
+    border-color: #0056b3 !important;
+    outline: none !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+/* --- Equal size buttons in Streamlit columns --- */
+div[data-testid="column"] button {
+    width: 100% !important;
+    height: 50px !important;
+    padding: 0 10px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    background-color: #007bff !important;
+    color: rgb(0, 0, 0) !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hover effect */
+div[data-testid="column"] button:hover {
+    background-color: #0056b3 !important;
+    transform: translateY(-1px);
+}
+
+/* Button container spacing (if needed) */
+div[data-testid="column"] {
+    padding: 0.25rem !important;
+}
+
+/* Section headers and spacing */
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+hr, .stMarkdown {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Content area padding */
+section.main > div {
+    padding-top: 1rem;
+}
