@@ -114,11 +114,7 @@ def show_dashboard(switch_page):
     # UI Buttons
     col1, col2, col3, col4, col5 = st.columns([3, 3, 3, 3, 3])
     with col1:
-        button_label = (
-    "📝 Generate Report"
-    if not st.session_state.get("report_generated", False)
-    else "🔁 Regenerate Failed Reports"
-)
+        button_label ="📝 Generate Report"
 
         if st.button(button_label):
             st.session_state.run_report = True
