@@ -5,8 +5,8 @@ sentence-transformers
 faiss-cpu
 pymupdf
 requests
-telegram-bot
+python-telegram-bot
 gTTS
-pathlib
 pandas
 nbimporter
+
