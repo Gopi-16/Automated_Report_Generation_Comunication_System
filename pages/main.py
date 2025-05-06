@@ -48,7 +48,7 @@ from pages.dashboard import show_dashboard
 from utils import load_css, centered_form
 
 # Page setup
-st.set_page_config(page_title="User Management App", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Progress Report Generation App", layout="centered", initial_sidebar_state="collapsed")
 
 # Hide sidebar immediately
 st.markdown("""
