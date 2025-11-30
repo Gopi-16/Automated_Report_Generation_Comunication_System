@@ -1,5 +1,5 @@
 from langchain_core.prompts import PromptTemplate
-
+import streamlit as st
 from dotenv import load_dotenv
 import os
 def generate_prompt_template(data):
@@ -41,7 +41,7 @@ import time
 load_dotenv()
 
 # Fetch API key from .env securely
-api_key = Report_API_KEY
+api_key = st.secrests["Report_API_KEY"]
 if not api_key:
     raise ValueError("API key not found. Make sure it's set in the .env file as OPENROUTER_API_KEY")
 def model_response(prompt_template, student_data, retries=3, delay=5):
