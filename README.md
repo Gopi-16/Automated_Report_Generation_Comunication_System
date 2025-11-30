@@ -1,1 +1,2 @@
 # Automated_Report_Generation_Comunication_System
+# mini_project_verify
