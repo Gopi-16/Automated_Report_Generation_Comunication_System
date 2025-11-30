@@ -8,7 +8,7 @@ from pages.dashboard import show_dashboard
 from utils import load_css, centered_form
 
 #page setup
-st.set_page_config(page_title="User Management App", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Automated Report And CS System", layout="centered", initial_sidebar_state="collapsed")
 #load css file
 load_css("styles/main.css")
 create_table()

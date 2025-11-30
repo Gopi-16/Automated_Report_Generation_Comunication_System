@@ -1,4 +1,5 @@
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+
 from dotenv import load_dotenv
 import os
 def generate_prompt_template(data):
@@ -40,7 +41,7 @@ import time
 load_dotenv()
 
 # Fetch API key from .env securely
-api_key = os.getenv("Report_API_KEY")
+api_key = Report_API_KEY
 if not api_key:
     raise ValueError("API key not found. Make sure it's set in the .env file as OPENROUTER_API_KEY")
 def model_response(prompt_template, student_data, retries=3, delay=5):
@@ -58,7 +59,7 @@ def model_response(prompt_template, student_data, retries=3, delay=5):
     }
 
     payload = {
-        "model": "deepseek/deepseek-r1-distill-llama-70b:free",  
+        "model": "deepseek/deepseek-r1-distill-llama-70b",  
         "messages": [
             {"role": "system", "content": "You are an expert in educational report generation."},
             {"role": "user", "content": prompt}

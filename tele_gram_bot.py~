@@ -8,8 +8,8 @@ load_dotenv()
 
 # Fetch API key from .env securely
 TOKEN = os.getenv("Tele_Token")
-if not api_key:
-    raise ValueError("API key not found. Make sure it's set in the .env file as OPENROUTER_API_KEY")
+if not TOKEN:
+    raise ValueError("API key not found. Make sure it's set in the .env file Token Error")
 #TOKEN = "7226566019:AAFbejFkrE5U4_TbtJ_qrMLGOhXBEqg7NT0"  # replace with your bot token
 bot = Bot(token=TOKEN)
 
